@@ -1,0 +1,2 @@
+export type StayExtraValues = { guest_id: string; email: string; phone: string; language: string; country: string; guest_notes: string; adults: number; children: number; arrival_time: string; special_request: string; nightly_rate: string }
+export const emptyExtras: StayExtraValues = { guest_id: '', email: '', phone: '', language: '', country: '', guest_notes: '', adults: 1, children: 0, arrival_time: '', special_request: '', nightly_rate: '' }

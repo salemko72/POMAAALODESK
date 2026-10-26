@@ -1,0 +1,7 @@
+Add this import:
+import { PeoplePage } from './pages/PeoplePage'
+
+Add this route inside the authenticated Routes:
+<Route path="/people" element={<PeoplePage />} />
+
+The Settings "People" button can then navigate to /people in the next UI polish pass.

@@ -1,0 +1,2 @@
+# Local Worker development only. Never commit the real value.
+SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY

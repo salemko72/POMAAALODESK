@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+html { font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif; width: 100%; overflow-x: hidden; background: #f6f1e9; }
+body, #root { margin: 0; width: 100%; max-width: 100%; min-width: 0; overflow-x: hidden; background: transparent; color: #18304f; }
+button, input, select, textarea { font: inherit; }
+* { box-sizing: border-box; }
+
+/* iOS Safari automatically zooms focused form controls whose computed text is
+   smaller than 16px. Keep controls at the native threshold on touch screens;
+   this prevents focus zoom without disabling the user's pinch-to-zoom. */
+@supports (-webkit-touch-callout: none) {
+  @media (hover: none) and (pointer: coarse) {
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']),
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
+.status-ribbon-label { writing-mode: vertical-rl; transform: rotate(180deg); }
+.welcome-input { width: 100%; border: 1px solid #e2e8f0; border-radius: .85rem; background: #fff; padding: .7rem .8rem; font-size: .875rem; font-weight: 400; outline: none; transition: border-color .15s, box-shadow .15s; }
+.welcome-input:focus { border-color: #8b5cf6; box-shadow: 0 0 0 4px rgb(139 92 246 / .08); }
+.welcome-field-icon { pointer-events: none; position: absolute; left: .8rem; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+.welcome-primary { display: flex; width: 100%; align-items: center; justify-content: center; gap: .6rem; border-radius: .9rem; background: #7c3aed; padding: .8rem 1rem; font-size: .8rem; font-weight: 600; color: white; transition: background .15s, opacity .15s; }
+.welcome-primary:hover { background: #6d28d9; }
+.welcome-primary:disabled { cursor: wait; opacity: .55; }
+.agency-title-mark {
+  display: inline-flex;
+  width: .86em;
+  height: .86em;
+  margin-left: .2em;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  vertical-align: -.1em;
+  border: 3px solid rgb(255 255 255 / 92%);
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #8b5cf6, #38bdf8);
+  color: white;
+  box-shadow: 0 7px 18px rgb(41 55 85 / 18%);
+}
+.agency-title-mark > img { width: 100%; height: 100%; object-fit: cover; }
+.agency-title-initials { font-size: .24em; font-weight: 600; line-height: 1; letter-spacing: 0; }
+.app-content h1 {
+  font-size: 2.938rem !important;
+  font-weight: 300 !important;
+  line-height: .95 !important;
+  letter-spacing: -.025em !important;
+}
+@media (min-width: 640px) {
+  .app-content h1 { font-size: 3.7rem !important; }
+}
+
+/* The image lives in its own viewport-fixed layer so iOS Safari never scrolls it
+   with the document, unlike background-attachment: fixed. */
+.app-shell {
+  position: relative;
+  isolation: isolate;
+  background: transparent !important;
+}
+.app-background-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+  background: #f6f1e9 url('/app-background.png') center center / cover no-repeat;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+.app-background-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(246 241 233 / 10%);
+}
+.app-content { background: transparent !important; }
+
+html:not(.dark) .app-shell :where(
+  [class~="bg-white"],
+  [class~="bg-white/50"],
+  [class~="bg-white/90"],
+  [class~="bg-white/95"],
+  [class~="bg-white/96"],
+  [class~="bg-[#fffdfa]"],
+  [class~="bg-[#fbfaf7]"]
+) {
+  background-color: rgb(255 255 255 / 93%) !important;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+html:not(.dark) .app-shell :where(input, select, textarea)[class~="bg-white"] {
+  background-color: rgb(255 255 255 / 97%) !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.app-side-nav,
+.app-bottom-nav {
+  background-color: rgb(255 253 250 / 70%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(115%);
+  backdrop-filter: blur(14px) saturate(115%);
+}
+
+/* Keep three comfortable cards on squarer desktop windows. Once the app has
+   nearly its full content width and the viewport is wider than 4:3, use the
+   extra horizontal room for a fourth property without shrinking the cards. */
+@media (min-width: 1360px) and (min-aspect-ratio: 134 / 100) {
+  .properties-grid-wide {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+
+html.dark { color-scheme: dark; }
+html.dark body, html.dark #root { background: #000 !important; color: #b8b8b8; }
+html.dark .app-shell { background: transparent !important; color: #b8b8b8; }
+html.dark .app-background-layer::after { background: rgb(0 0 0 / 72%); }
+html.dark .app-side-nav, html.dark .app-bottom-nav { background: rgb(24 24 24 / 72%) !important; border-color: #3a3a3a !important; }
+html.dark .app-shell :where(.bg-white, .bg-white\/50, .bg-white\/90, .bg-white\/95, .bg-white\/96) { background-color: rgb(36 36 36 / 92%) !important; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+html.dark .bg-slate-50 { background-color: #2b2b2b !important; }
+html.dark .bg-slate-100 { background-color: #333 !important; }
+html.dark .bg-slate-200 { background-color: #3d3d3d !important; }
+html.dark .bg-violet-50 { background-color: #292240 !important; }
+html.dark .bg-violet-100 { background-color: #352b54 !important; }
+html.dark .border-slate-100 { border-color: #2b3340 !important; }
+html.dark .border-slate-200 { border-color: #394250 !important; }
+html.dark .border-slate-300 { border-color: #465163 !important; }
+html.dark .text-slate-900 { color: #f8fafc !important; }
+html.dark .text-slate-800 { color: #f1f5f9 !important; }
+html.dark .text-slate-700 { color: #e2e8f0 !important; }
+html.dark .text-slate-600 { color: #cbd5e1 !important; }
+html.dark .text-slate-500 { color: #94a3b8 !important; }
+html.dark .text-slate-400 { color: #94a3b8 !important; }
+html.dark h1, html.dark h1.text-slate-900 { color: #808080 !important; }
+html.dark .bg-\[\#f6f1e9\] { background-color: transparent !important; }
+html.dark .bg-\[\#fffdfa\], html.dark .bg-\[\#fbfaf7\] { background-color: rgb(36 36 36 / 92%) !important; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+html.dark input, html.dark select, html.dark textarea { background-color: #171c26; color: #f8fafc; border-color: #394250; }
+html.dark input[readonly] { background-color: #1b212c !important; color: #94a3b8 !important; }
+html.dark .hover\:bg-slate-100:hover { background-color: #2a3240 !important; }
+html.dark .hover\:bg-slate-50:hover { background-color: #222936 !important; }
+html.dark .hover\:bg-slate-200:hover { background-color: #343d4c !important; }

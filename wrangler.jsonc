@@ -1,0 +1,21 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "pomaaalodesk-images",
+	"main": "worker/property-images.ts",
+	"compatibility_date": "2026-09-10",
+	"account_id": "21db5c0516fc09fed9e4b49aed03f06d",
+	"workers_dev": true,
+	"observability": {
+		"enabled": true
+	},
+	"r2_buckets": [
+		{
+			"binding": "PROPERTY_IMAGES",
+			"bucket_name": "pomaaalodesk-property-images"
+		}
+	],
+	"vars": {
+		"SUPABASE_URL": "https://jawcaedeynlbyntjolrg.supabase.co",
+		"ALLOWED_ORIGINS": "https://bookweb.pages.dev,http://localhost:4173,http://127.0.0.1:4173,http://localhost:5173,http://127.0.0.1:5173"
+	}
+}
