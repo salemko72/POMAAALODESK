@@ -39,3 +39,64 @@ describe('operations views',()=>{
   expect(await screen.findByLabelText('Status Window')).toBeDisabled()
  })
 })
+
+
+describe('cancelled import archive', () => {
+ const now = new Date('2026-10-27T12:00:00Z')
+ function cancelled(id: string, source: string, modified: string | null) {
+  return { ...row, id, guest_name: id, source, status: 'cancelled', last_modified_at: modified, updated_at: now.toISOString() }
+ }
+ it('moves old cancellations from every imported provider into a searchable archive', async () => {
+  vi.setSystemTime(now)
+  try {
+   mocks.rows.mockResolvedValue({data:[
+    cancelled('Old Airbnb','airbnb','2026-10-20T12:00:00Z'),
+    cancelled('Old Booking','booking','2026-10-19T12:00:00Z'),
+    cancelled('Other feed','other_ical','2026-10-19T12:00:00Z'),
+    {...cancelled('Imported as cancelled','airbnb',null),created_actor_kind:'ical',created_at:'2026-10-19T12:00:00Z'},
+    cancelled('Recent Airbnb','airbnb','2026-10-20T12:00:01Z'),
+    cancelled('Manual cancellation','direct','2026-10-01T12:00:00Z'),
+    {...cancelled('Reactivated','booking','2026-10-01T12:00:00Z'),status:'confirmed'},
+   ],error:null})
+   render(<MemoryRouter><OperationsPage mode="reservations" role="admin"/></MemoryRouter>)
+   expect(await screen.findByText('Recent Airbnb')).toBeInTheDocument()
+   expect(screen.queryByText('Old Airbnb')).not.toBeInTheDocument()
+   expect(screen.queryByText('Old Booking')).not.toBeInTheDocument()
+   expect(screen.queryByText('Other feed')).not.toBeInTheDocument()
+   expect(screen.queryByText('Imported as cancelled')).not.toBeInTheDocument()
+   expect(screen.getByText('Manual cancellation')).toBeInTheDocument()
+   expect(screen.getByText('Reactivated')).toBeInTheDocument()
+   fireEvent.change(screen.getByLabelText('Reservation filter'),{target:{value:'archived'}})
+   expect(screen.getByText('Old Airbnb')).toBeInTheDocument()
+   expect(screen.getByText('Old Booking')).toBeInTheDocument()
+   expect(screen.getByText('Other feed')).toBeInTheDocument()
+   expect(screen.getByText('Imported as cancelled')).toBeInTheDocument()
+   expect(screen.queryByText('Recent Airbnb')).not.toBeInTheDocument()
+   expect(screen.queryByText('Manual cancellation')).not.toBeInTheDocument()
+   expect(screen.queryByText('Reactivated')).not.toBeInTheDocument()
+   fireEvent.change(screen.getByLabelText('Search'),{target:{value:'Old Booking'}})
+   expect(screen.getByText('Old Booking')).toBeInTheDocument()
+   expect(screen.queryByText('Old Airbnb')).not.toBeInTheDocument()
+  } finally { vi.useRealTimers() }
+ })
+ it('keeps undated cancellations visible and uses the update date for legacy rows', async () => {
+  vi.setSystemTime(now)
+  try {
+   mocks.rows.mockResolvedValue({data:[
+    {...cancelled('Legacy old','booking',null),updated_at:'2026-10-01T12:00:00Z'},
+    {...cancelled('Undated','airbnb',null),updated_at:undefined},
+    {...cancelled('Invalid date','airbnb','invalid'),updated_at:undefined},
+   ],error:null})
+   render(<MemoryRouter><OperationsPage mode="reservations" role="viewer"/></MemoryRouter>)
+   expect(await screen.findByText('Undated')).toBeInTheDocument()
+   expect(screen.getByText('Invalid date')).toBeInTheDocument()
+   expect(screen.queryByText('Legacy old')).not.toBeInTheDocument()
+   fireEvent.change(screen.getByLabelText('Reservation filter'),{target:{value:'cancelled'}})
+   expect(screen.getByText('Undated')).toBeInTheDocument()
+   expect(screen.queryByText('Legacy old')).not.toBeInTheDocument()
+   fireEvent.change(screen.getByLabelText('Reservation filter'),{target:{value:'archived'}})
+   expect(screen.getByText('Legacy old')).toBeInTheDocument()
+   expect(screen.queryByText('Undated')).not.toBeInTheDocument()
+  } finally { vi.useRealTimers() }
+ })
+})
